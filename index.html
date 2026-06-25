@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ============================================
+       META & SEO
+       ============================================ -->
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover"
+  />
+  <meta name="description" content="A premium interactive birthday celebration" />
+  <meta name="theme-color" content="#0a0613" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
+
+  <!-- ============================================
+       TITLE (Sister's name auto-filled by JS)
+       ============================================ -->
+  <title>Happy Birthday <span data-sister-title></span> 🎂</title>
+
+  <!-- ============================================
+       FONTS — Premium typography
+       Playfair Display: Elegant serif for headings
+       Dancing Script: Handwritten flourishes
+       Plus Jakarta Sans: Modern sans for body
+       ============================================ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=Dancing+Script:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- ============================================
+       STYLES
+       ============================================ -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- ============================================
+       LOADING SCREEN
+       (Tap to start — also unlocks audio on mobile)
+       ============================================ -->
+  <div id="loader" class="loader" aria-hidden="true">
+    <div class="loader-ring"></div>
+    <p class="loader-text">Preparing something special…</p>
+    <p class="loader-hint">Tap anywhere to begin ✨</p>
+  </div>
+
+  <!-- ============================================
+       GLOBAL CANVAS LAYERS
+       ============================================ -->
+  <canvas id="stars-canvas" class="canvas-stars" aria-hidden="true"></canvas>
+  <canvas id="confetti-canvas" class="canvas-confetti" aria-hidden="true"></canvas>
+
+  <!-- ============================================
+       FLOATING BALLOONS (Pure CSS, themed)
+       ============================================ -->
+  <div class="balloons" aria-hidden="true">
+    <div class="balloon b1"><span class="balloon-string"></span></div>
+    <div class="balloon b2"><span class="balloon-string"></span></div>
+    <div class="balloon b3"><span class="balloon-string"></span></div>
+    <div class="balloon b4"><span class="balloon-string"></span></div>
+    <div class="balloon b5"><span class="balloon-string"></span></div>
+    <div class="balloon b6"><span class="balloon-string"></span></div>
+  </div>
+
+  <!-- ============================================
+       FLOATING HEARTS CONTAINER (JS driven)
+       ============================================ -->
+  <div class="floating-hearts" aria-hidden="true"></div>
+
+  <!-- ============================================
+       MUSIC TOGGLE BUTTON
+       ============================================ -->
+  <button id="music-toggle" class="music-toggle is-muted" aria-label="Toggle background music" title="Toggle music">
+    <span class="music-icon music-icon-on">🎵</span>
+    <span class="music-icon music-icon-off">🔇</span>
+    <span class="music-pulse"></span>
+  </button>
+
+  <!-- ============================================
+       NAVIGATION (Floating glass pill)
+       ============================================ -->
+  <nav class="top-nav" aria-label="Sections">
+    <a href="#hero" class="nav-dot active" data-target="hero" title="Home"></a>
+    <a href="#message" class="nav-dot" data-target="message" title="Letter"></a>
+    <a href="#cake" class="nav-dot" data-target="cake" title="Cake"></a>
+    <a href="#gallery" class="nav-dot" data-target="gallery" title="Memories"></a>
+    <a href="#timeline" class="nav-dot" data-target="timeline" title="Timeline"></a>
+    <a href="#wishes" class="nav-dot" data-target="wishes" title="Wishes"></a>
+  </nav>
+
+  <!-- ============================================
+       HERO SECTION
+       ============================================ -->
+  <section id="hero" class="hero">
+    <!-- Soft gradient orbs for depth -->
+    <div class="orb orb-1" aria-hidden="true"></div>
+    <div class="orb orb-2" aria-hidden="true"></div>
+    <div class="orb orb-3" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <p class="hero-eyebrow reveal">
+        <span class="dot-live"></span> Today is your special day!
+      </p>
+
+      <h1 class="hero-title" aria-label="Happy Birthday">
+        <!-- Letters injected by JS for staggered animation -->
+      </h1>
+
+      <p class="hero-subtitle reveal">
+        To my dearest <span class="name-script" data-sister></span>
+      </p>
+
+      <p class="hero-message reveal">
+        <span id="typewriter"></span><span class="caret">|</span>
+      </p>
+
+      <div class="hero-cta reveal">
+        <button id="btn-celebrate" class="btn btn-primary">
+          <span>Celebrate</span>
+          <span class="btn-sparkle">✨</span>
+        </button>
+        <a href="#message" class="btn btn-ghost">Read my letter →</a>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator" aria-hidden="true">
+      <span class="mouse"><span class="wheel"></span></span>
+      <span class="scroll-text">Scroll to begin</span>
+    </div>
+  </section>
+
+  <!-- ============================================
+       MESSAGE / LETTER SECTION
+       ============================================ -->
+  <section id="message" class="section message-section">
+    <div class="container">
+      <div class="glass-card letter-card reveal">
+        <div class="card-corner card-corner-tl"></div>
+        <div class="card-corner card-corner-tr"></div>
+        <div class="card-corner card-corner-bl"></div>
+        <div class="card-corner card-corner-br"></div>
+
+        <p class="card-eyebrow">A letter for you</p>
+        <h2 class="card-title">Dear <span data-sister></span>,</h2>
+
+        <div class="letter-body">
+          <p>
+            Some people make the world softer just by being in it — and you are one of them.
+            From the little laughs to the big life moments, you've turned ordinary days into
+            memories I keep close.
+          </p>
+          <p>
+            Today is about <em>you</em> — your laugh, your wild ideas, your stubborn kindness,
+            the way you make even boring Tuesday afternoons feel like a movie scene.
+          </p>
+          <p>
+            I made this little place on the internet just for you. Scroll slowly. Click the candles.
+            Make a wish. And know — wherever you go, whatever you do this year — I'm rooting for you,
+            loudly.
+          </p>
+          <p class="signature">
+            With all my love,<br />
+            <span class="signature-name">Your sibling 💗</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       CAKE SECTION
+       ============================================ -->
+  <section id="cake" class="section cake-section">
+    <div class="container">
+      <p class="section-eyebrow reveal">Make a wish</p>
+      <h2 class="section-title reveal">Blow the candles, <span data-sister></span></h2>
+      <p class="section-sub reveal">Click each flame to make a wish ✨</p>
+
+      <div class="cake-stage reveal">
+        <!-- Cake is pure CSS -->
+        <div class="cake" role="button" tabindex="0" aria-label="Click candles to blow them out">
+          <div class="candles" id="candles">
+            <div class="candle" data-candle>
+              <div class="flame"></div>
+            </div>
+            <div class="candle" data-candle>
+              <div class="flame"></div>
+            </div>
+            <div class="candle" data-candle>
+              <div class="flame"></div>
+            </div>
+            <div class="candle" data-candle>
+              <div class="flame"></div>
+            </div>
+            <div class="candle" data-candle>
+              <div class="flame"></div>
+            </div>
+          </div>
+
+          <div class="cake-top"></div>
+          <div class="cake-drip"></div>
+          <div class="cake-middle"></div>
+          <div class="cake-bottom"></div>
+          <div class="plate"></div>
+        </div>
+
+        <p id="wish-text" class="wish-text"></p>
+        <button id="reset-candles" class="btn btn-ghost btn-small">↻ Light them again</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       MEMORIES — illustrated cards (no photos needed)
+       ============================================ -->
+  <section id="gallery" class="section memories-section">
+    <div class="container">
+      <p class="section-eyebrow reveal">Heart full</p>
+      <h2 class="section-title reveal">A few of my favorite things about <em>you</em></h2>
+      <p class="section-sub reveal">Six little memories I keep close — no photo required, just words and love.</p>
+
+      <div class="gallery-grid">
+        <!-- Card 1 — tall, heart -->
+        <article class="memory-card memory-tall reveal" style="--gi:0;">
+          <div class="memory-art ph-1">
+            <svg class="memory-illustration" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M50 86 C18 64, 6 44, 22 30 C32 22, 50 32, 50 38 C50 32, 68 22, 78 30 C94 44, 82 64, 50 86 Z" fill="rgba(255,255,255,0.95)"/>
+              <circle cx="20" cy="22" r="1.5" fill="rgba(255,255,255,0.85)"/>
+              <circle cx="82" cy="20" r="2" fill="rgba(255,255,255,0.7)"/>
+              <circle cx="14" cy="48" r="1" fill="rgba(255,255,255,0.75)"/>
+              <circle cx="88" cy="55" r="1.5" fill="rgba(255,255,255,0.6)"/>
+              <circle cx="48" cy="14" r="1" fill="rgba(255,255,255,0.8)"/>
+            </svg>
+            <div class="memory-overlay">
+              <span class="memory-tag">Year one</span>
+              <h3>The day you arrived</h3>
+              <p>The world got a little softer — and a lot more fun.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2 — moon & stars -->
+        <article class="memory-card reveal" style="--gi:1;">
+          <div class="memory-art ph-2">
+            <svg class="memory-illustration" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M62 18 A32 32 0 1 0 62 82 A24 24 0 1 1 62 18 Z" fill="rgba(255,255,255,0.95)"/>
+              <circle cx="22" cy="22" r="2" fill="rgba(255,255,255,0.9)"/>
+              <circle cx="84" cy="18" r="1.5" fill="rgba(255,255,255,0.75)"/>
+              <circle cx="12" cy="62" r="1.2" fill="rgba(255,255,255,0.8)"/>
+              <circle cx="88" cy="78" r="1.8" fill="rgba(255,255,255,0.7)"/>
+              <circle cx="42" cy="88" r="1" fill="rgba(255,255,255,0.65)"/>
+              <path d="M30 38 L32 44 L38 44 L33 48 L35 54 L30 50 L25 54 L27 48 L22 44 L28 44 Z" fill="rgba(255,255,255,0.6)"/>
+            </svg>
+            <div class="memory-overlay">
+              <span class="memory-tag">Always</span>
+              <h3>3 AM talks</h3>
+              <p>About nothing and everything.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3 — sparkles -->
+        <article class="memory-card reveal" style="--gi:2;">
+          <div class="memory-art ph-3">
+            <svg class="memory-illustration" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M50 14 L54 32 L72 36 L54 40 L50 58 L46 40 L28 36 L46 32 Z" fill="rgba(255,255,255,0.95)"/>
+              <path d="M22 60 L24 70 L34 72 L24 74 L22 84 L20 74 L10 72 L20 70 Z" fill="rgba(255,255,255,0.75)"/>
+              <path d="M78 64 L80 72 L88 74 L80 76 L78 84 L76 76 L68 74 L76 72 Z" fill="rgba(255,255,255,0.7)"/>
+              <circle cx="38" cy="20" r="1.5" fill="rgba(255,255,255,0.8)"/>
+              <circle cx="68" cy="80" r="1" fill="rgba(255,255,255,0.6)"/>
+              <circle cx="14" cy="42" r="1" fill="rgba(255,255,255,0.5)"/>
+            </svg>
+            <div class="memory-overlay">
+              <span class="memory-tag">Forever</span>
+              <h3>The little things</h3>
+              <p>You make ordinary days feel like a movie.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 4 — wide, envelope -->
+        <article class="memory-card memory-wide reveal" style="--gi:3;">
+          <div class="memory-art ph-4">
+            <svg class="memory-illustration" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="18" y="32" width="64" height="44" rx="3" fill="rgba(255,255,255,0.95)"/>
+              <path d="M18 32 L50 58 L82 32" fill="none" stroke="rgba(212,175,55,0.85)" stroke-width="2.5" stroke-linejoin="round"/>
+              <path d="M50 58 C42 50, 38 44, 44 40 C48 38, 52 42, 50 44 C48 42, 52 38, 56 40 C62 44, 58 50, 50 58 Z" fill="#d4af37"/>
+              <circle cx="78" cy="24" r="1.5" fill="rgba(255,255,255,0.7)"/>
+              <circle cx="22" cy="22" r="1" fill="rgba(255,255,255,0.6)"/>
+            </svg>
+            <div class="memory-overlay">
+              <span class="memory-tag">Every year</span>
+              <h3>Adventures together</h3>
+              <p>From little trips to big life chapters — better with you.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 5 — flower -->
+        <article class="memory-card reveal" style="--gi:4;">
+          <div class="memory-art ph-5">
+            <svg class="memory-illustration" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <ellipse cx="50" cy="26" rx="10" ry="14" fill="rgba(255,255,255,0.85)"/>
+              <ellipse cx="50" cy="74" rx="10" ry="14" fill="rgba(255,255,255,0.85)"/>
+              <ellipse cx="26" cy="50" rx="14" ry="10" fill="rgba(255,255,255,0.85)"/>
+              <ellipse cx="74" cy="50" rx="14" ry="10" fill="rgba(255,255,255,0.85)"/>
+              <ellipse cx="34" cy="34" rx="11" ry="8" fill="rgba(255,255,255,0.7)" transform="rotate(-45 34 34)"/>
+              <ellipse cx="66" cy="34" rx="11" ry="8" fill="rgba(255,255,255,0.7)" transform="rotate(45 66 34)"/>
+              <ellipse cx="34" cy="66" rx="11" ry="8" fill="rgba(255,255,255,0.7)" transform="rotate(45 34 66)"/>
+              <ellipse cx="66" cy="66" rx="11" ry="8" fill="rgba(255,255,255,0.7)" transform="rotate(-45 66 66)"/>
+              <circle cx="50" cy="50" r="9" fill="#d4af37"/>
+              <circle cx="48" cy="48" r="2" fill="#fff5e6" opacity="0.6"/>
+            </svg>
+            <div class="memory-overlay">
+              <span class="memory-tag">Recently</span>
+              <h3>How you always know</h3>
+              <p>The right words, at the right time.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 6 — tall, cake -->
+        <article class="memory-card memory-tall reveal" style="--gi:5;">
+          <div class="memory-art ph-6">
+            <svg class="memory-illustration" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <!-- candles -->
+              <rect x="38" y="14" width="3" height="14" fill="rgba(255,255,255,0.85)"/>
+              <rect x="49" y="14" width="3" height="14" fill="rgba(255,255,255,0.85)"/>
+              <rect x="60" y="14" width="3" height="14" fill="rgba(255,255,255,0.85)"/>
+              <!-- flames -->
+              <ellipse cx="39.5" cy="11" rx="2.5" ry="4" fill="#ffd700"/>
+              <ellipse cx="50.5" cy="11" rx="2.5" ry="4" fill="#ffd700"/>
+              <ellipse cx="61.5" cy="11" rx="2.5" ry="4" fill="#ffd700"/>
+              <!-- top tier -->
+              <rect x="32" y="28" width="36" height="18" rx="2" fill="rgba(255,255,255,0.95)"/>
+              <!-- middle tier -->
+              <rect x="26" y="46" width="48" height="20" rx="2" fill="rgba(255,255,255,0.88)"/>
+              <!-- bottom tier -->
+              <rect x="20" y="66" width="60" height="22" rx="3" fill="rgba(255,255,255,0.95)"/>
+              <!-- decorations -->
+              <circle cx="36" cy="37" r="1.5" fill="#ff6b9d"/>
+              <circle cx="46" cy="37" r="1.5" fill="#d4af37"/>
+              <circle cx="56" cy="37" r="1.5" fill="#ff6b9d"/>
+              <circle cx="62" cy="37" r="1.5" fill="#d4af37"/>
+              <circle cx="32" cy="56" r="1.5" fill="#b794f4"/>
+              <circle cx="44" cy="56" r="1.5" fill="#ff6b9d"/>
+              <circle cx="56" cy="56" r="1.5" fill="#b794f4"/>
+              <circle cx="68" cy="56" r="1.5" fill="#ff6b9d"/>
+              <circle cx="26" cy="77" r="1.5" fill="#d4af37"/>
+              <circle cx="40" cy="77" r="1.5" fill="#ff6b9d"/>
+              <circle cx="54" cy="77" r="1.5" fill="#d4af37"/>
+              <circle cx="68" cy="77" r="1.5" fill="#ff6b9d"/>
+              <circle cx="74" cy="77" r="1.5" fill="#d4af37"/>
+              <!-- sparkles -->
+              <circle cx="14" cy="20" r="1" fill="rgba(255,255,255,0.7)"/>
+              <circle cx="86" cy="22" r="1.5" fill="rgba(255,255,255,0.6)"/>
+              <circle cx="10" cy="60" r="1" fill="rgba(255,255,255,0.5)"/>
+              <circle cx="90" cy="68" r="1" fill="rgba(255,255,255,0.6)"/>
+            </svg>
+            <div class="memory-overlay">
+              <span class="memory-tag">Today</span>
+              <h3>Another year of you</h3>
+              <p>And I'd choose you all over again.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       MEMORY TIMELINE
+       ============================================ -->
+  <section id="timeline" class="section timeline-section">
+    <div class="container">
+      <p class="section-eyebrow reveal">Our story so far</p>
+      <h2 class="section-title reveal">A timeline of <em>us</em></h2>
+
+      <div class="timeline">
+        <!-- Timeline items — edit the years/messages to fit your story -->
+        <div class="timeline-item reveal">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card glass-card">
+            <span class="timeline-year">Year One</span>
+            <h3>The day you arrived</h3>
+            <p>The world shifted a little — and got a lot more fun.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card glass-card">
+            <span class="timeline-year">Growing Up</span>
+            <h3>Little adventures</h3>
+            <p>First road trips, late-night talks, inside jokes no one else gets.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card glass-card">
+            <span class="timeline-year">The Hard Stuff</span>
+            <h3>We figured it out</h3>
+            <p>Through every storm, you showed up. That matters more than you know.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card glass-card">
+            <span class="timeline-year">Today</span>
+            <h3>Your chapter</h3>
+            <p>Another year, another reason to be proud of who you're becoming.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-dot timeline-dot-final">
+            <span class="timeline-dot-inner">★</span>
+          </div>
+          <div class="timeline-card glass-card timeline-card-final">
+            <span class="timeline-year">Next</span>
+            <h3>To be continued…</h3>
+            <p>The best stories don't have endings — they have sequels. ✨</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       WISHES CARDS
+       ============================================ -->
+  <section id="wishes" class="section wishes-section">
+    <div class="container">
+      <p class="section-eyebrow reveal">A few words</p>
+      <h2 class="section-title reveal">Birthday wishes</h2>
+
+      <div class="wishes-grid">
+        <article class="wish-card glass-card reveal" style="--wi:0;">
+          <div class="wish-icon">🌸</div>
+          <h3>Soft, brave you</h3>
+          <p>
+            May you always trust yourself the way I trust you — fully, and without question.
+          </p>
+        </article>
+
+        <article class="wish-card glass-card reveal" style="--wi:1;">
+          <div class="wish-icon">🌟</div>
+          <h3>Big dreams</h3>
+          <p>
+            May the goals that scare you a little become the ones that change everything.
+          </p>
+        </article>
+
+        <article class="wish-card glass-card reveal" style="--wi:2;">
+          <div class="wish-icon">💗</div>
+          <h3>Love, always</h3>
+          <p>
+            May you be loved loudly, gently, and in exactly the way you deserve.
+          </p>
+        </article>
+
+        <article class="wish-card glass-card reveal" style="--wi:3;">
+          <div class="wish-icon">🍰</div>
+          <h3>Sweetness</h3>
+          <p>
+            May every room you walk into feel a little warmer — because you brought the light.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       FINAL CTA
+       ============================================ -->
+  <section class="section final-cta-section">
+    <div class="container">
+      <div class="final-cta glass-card reveal">
+        <p class="section-eyebrow">One last thing…</p>
+        <h2>Ready for the surprise?</h2>
+        <button id="btn-final-celebrate" class="btn btn-primary btn-large">
+          <span>Celebrate <span data-sister></span></span>
+          <span class="btn-sparkle">🎉</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       FOOTER
+       ============================================ -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-line">
+        Made with
+        <span class="heart" aria-label="love">❤️</span>
+        for
+        <span class="name-script" data-sister></span>
+      </p>
+      <p class="footer-meta">A little birthday site · <span id="year"></span></p>
+    </div>
+  </footer>
+
+  <!-- ============================================
+       SURPRISE SCREEN (full-screen finale)
+       ============================================ -->
+  <div id="surprise" class="surprise" aria-hidden="true">
+    <canvas id="fireworks-canvas" class="canvas-fireworks" aria-hidden="true"></canvas>
+    <div class="surprise-glow" aria-hidden="true"></div>
+
+    <div class="surprise-content">
+      <p class="surprise-eyebrow">Today, and always</p>
+      <h1 class="surprise-title">
+        Happy Birthday, <span data-sister></span>
+        <span class="surprise-heart" aria-hidden="true">❤️</span>
+      </h1>
+      <p class="surprise-message">
+        May your year be filled with happiness, success, and beautiful memories.
+      </p>
+
+      <div class="surprise-actions">
+        <button id="surprise-close" class="btn btn-ghost">Replay the magic ✨</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       SCRIPTS
+       ============================================ -->
+  <script src="script.js"></script>
+</body>
+</html>
